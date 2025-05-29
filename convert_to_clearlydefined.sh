@@ -61,13 +61,13 @@ while IFS= read -r url; do
         tool="package"
         echo "curl -X POST \"https://api.clearlydefined.io/harvest\" -H \"accept: */*\" -H \"Content-Type: application/json\" -d \"[{\\\"tool\\\":\\\"$tool\\\",\\\"coordinates\\\":\\\"$coords\\\"}]\"" >> "$output"
         echo >> "$output"
-    elif [[ "$url" =~ ^https://ftp\.debian\.org/debian/pool/main/([^/]+)/([^/]+)/?$ ]]; then
-        pkg="${BASH_REMATCH[2]}"
-        version="0.84_all" # Placeholder; real scripts should extract actual version
-        coords="deb/debian/-/$pkg/$version"
-        tool="source"
-        echo "curl -X POST \"https://api.clearlydefined.io/harvest\" -H \"accept: */*\" -H \"Content-Type: application/json\" -d \"[{\\\"tool\\\":\\\"$tool\\\",\\\"coordinates\\\":\\\"$coords\\\"}]\"" >> "$output"
-        echo >> "$output"
+elif [[ "$url" =~ ^https://sources\.debian\.org/src/([^/]+)/([^/]+)/?$ ]]; then
+    pkg="${BASH_REMATCH[1]}"
+    version="${BASH_REMATCH[2]}"
+    coords="deb/debian/-/$pkg/$version"
+    tool="source"
+    echo "curl -X POST \"https://api.clearlydefined.io/harvest\" -H \"accept: */*\" -H \"Content-Type: application/json\" -d \"[{\\\"tool\\\":\\\"$tool\\\",\\\"coordinates\\\":\\\"$coords\\\"}]\"" >> "$output"
+    echo >> "$output"
     elif [[ "$url" =~ ^https://pkg\.go\.dev/([^@]+)@([^/]+)$ ]]; then
         module="${BASH_REMATCH[1]}"
         version="${BASH_REMATCH[2]}"
